@@ -72,3 +72,4 @@ D:\Documents\Reciep\RecipeAPI\obj\Debug\net8.0\RecipeAPI.genruntimeconfig.cache
 D:\Documents\Reciep\RecipeAPI\obj\Debug\net8.0\ref\RecipeAPI.dll
 D:\Documents\Reciep\RecipeAPI\bin\Debug\net8.0\BCrypt.Net-Next.dll
 D:\Documents\Reciep\RecipeAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Documents\Reciep\RecipeAPI\obj\Debug\net8.0\RecipeAPI.sourcelink.json

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\Documents\\Reciep\\RecipeAPI\\RecipeAPI.csproj": {}
+    "D:\\Documents\\Reciep\\RecipeAPI\\RecipeAPI.csproj": {}
   },
   "projects": {
-    "d:\\Documents\\Reciep\\RecipeAPI\\RecipeAPI.csproj": {
+    "D:\\Documents\\Reciep\\RecipeAPI\\RecipeAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\Documents\\Reciep\\RecipeAPI\\RecipeAPI.csproj",
+        "projectUniqueName": "D:\\Documents\\Reciep\\RecipeAPI\\RecipeAPI.csproj",
         "projectName": "RecipeAPI",
-        "projectPath": "d:\\Documents\\Reciep\\RecipeAPI\\RecipeAPI.csproj",
+        "projectPath": "D:\\Documents\\Reciep\\RecipeAPI\\RecipeAPI.csproj",
         "packagesPath": "C:\\Users\\Niveditha\\.nuget\\packages\\",
-        "outputPath": "d:\\Documents\\Reciep\\RecipeAPI\\obj\\",
+        "outputPath": "D:\\Documents\\Reciep\\RecipeAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Niveditha\\AppData\\Roaming\\NuGet\\NuGet.Config",
