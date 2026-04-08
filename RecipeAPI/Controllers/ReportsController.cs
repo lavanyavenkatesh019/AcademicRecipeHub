@@ -124,5 +124,27 @@ namespace RecipeAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult DeleteReport(int id)
+        {
+            try
+            {
+                using (var conn = new SqlConnection(_connectionString))
+                {
+                    using (var cmd = new SqlCommand("DELETE FROM Reports WHERE Id = @Id", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", id);
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

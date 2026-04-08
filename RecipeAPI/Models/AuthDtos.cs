@@ -19,5 +19,18 @@ namespace RecipeAPI.Models
         public string Username { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
         public int UserId { get; set; }
+        public string? ProfilePicture { get; set; }
+    }
+
+    public class ChangePasswordRequest
+    {
+        public string CurrentPassword { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
+    }
+
+    public class ResetPasswordRequest
+    {
+        public string Username { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
     }
 }

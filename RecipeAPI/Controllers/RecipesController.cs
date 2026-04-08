@@ -44,6 +44,7 @@ namespace RecipeAPI.Controllers
                                 ImageUrl = reader.IsDBNull(reader.GetOrdinal("ImageUrl")) ? null : reader.GetString(reader.GetOrdinal("ImageUrl")),
                                 Category = reader.GetString(reader.GetOrdinal("Category")),
                                 CookingTime = reader.IsDBNull(reader.GetOrdinal("CookingTime")) ? null : reader.GetString(reader.GetOrdinal("CookingTime")),
+                                Level = reader.IsDBNull(reader.GetOrdinal("Level")) ? "Medium" : reader.GetString(reader.GetOrdinal("Level")),
                                 Rating = reader.GetDecimal(reader.GetOrdinal("Rating")),
                                 Status = reader.GetString(reader.GetOrdinal("Status")),
                                 Ingredients = reader.IsDBNull(reader.GetOrdinal("Ingredients")) ? null : reader.GetString(reader.GetOrdinal("Ingredients")),
@@ -81,6 +82,7 @@ namespace RecipeAPI.Controllers
                                 ImageUrl = reader.IsDBNull(reader.GetOrdinal("ImageUrl")) ? null : reader.GetString(reader.GetOrdinal("ImageUrl")),
                                 Category = reader.GetString(reader.GetOrdinal("Category")),
                                 CookingTime = reader.IsDBNull(reader.GetOrdinal("CookingTime")) ? null : reader.GetString(reader.GetOrdinal("CookingTime")),
+                                Level = reader.IsDBNull(reader.GetOrdinal("Level")) ? "Medium" : reader.GetString(reader.GetOrdinal("Level")),
                                 Rating = reader.GetDecimal(reader.GetOrdinal("Rating")),
                                 Status = reader.GetString(reader.GetOrdinal("Status")),
                                 Ingredients = reader.IsDBNull(reader.GetOrdinal("Ingredients")) ? null : reader.GetString(reader.GetOrdinal("Ingredients")),
@@ -112,6 +114,7 @@ namespace RecipeAPI.Controllers
                     cmd.Parameters.AddWithValue("@CookingTime", string.IsNullOrEmpty(recipe.CookingTime) ? (object)DBNull.Value : recipe.CookingTime);
                     cmd.Parameters.AddWithValue("@Ingredients", string.IsNullOrEmpty(recipe.Ingredients) ? (object)DBNull.Value : recipe.Ingredients);
                     cmd.Parameters.AddWithValue("@Instructions", string.IsNullOrEmpty(recipe.Instructions) ? (object)DBNull.Value : recipe.Instructions);
+                    cmd.Parameters.AddWithValue("@Level", string.IsNullOrEmpty(recipe.Level) ? "Medium" : recipe.Level);
                     cmd.Parameters.AddWithValue("@CreatedBy", recipe.CreatedBy);
                     
                     conn.Open();
@@ -128,7 +131,7 @@ namespace RecipeAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public IActionResult UpdateRecipe(int id, [FromBody] Recipe recipe)
         {
             using (var conn = new SqlConnection(_connectionString))
@@ -144,6 +147,7 @@ namespace RecipeAPI.Controllers
                     cmd.Parameters.AddWithValue("@CookingTime", string.IsNullOrEmpty(recipe.CookingTime) ? (object)DBNull.Value : recipe.CookingTime);
                     cmd.Parameters.AddWithValue("@Ingredients", string.IsNullOrEmpty(recipe.Ingredients) ? (object)DBNull.Value : recipe.Ingredients);
                     cmd.Parameters.AddWithValue("@Instructions", string.IsNullOrEmpty(recipe.Instructions) ? (object)DBNull.Value : recipe.Instructions);
+                    cmd.Parameters.AddWithValue("@Level", string.IsNullOrEmpty(recipe.Level) ? "Medium" : recipe.Level);
                     cmd.Parameters.AddWithValue("@Status", recipe.Status);
                     
                     conn.Open();
@@ -194,6 +198,7 @@ namespace RecipeAPI.Controllers
                                 ImageUrl = reader.IsDBNull(reader.GetOrdinal("ImageUrl")) ? null : reader.GetString(reader.GetOrdinal("ImageUrl")),
                                 Category = reader.GetString(reader.GetOrdinal("Category")),
                                 CookingTime = reader.IsDBNull(reader.GetOrdinal("CookingTime")) ? null : reader.GetString(reader.GetOrdinal("CookingTime")),
+                                Level = reader.IsDBNull(reader.GetOrdinal("Level")) ? "Medium" : reader.GetString(reader.GetOrdinal("Level")),
                                 Rating = reader.GetDecimal(reader.GetOrdinal("Rating")),
                                 Status = reader.GetString(reader.GetOrdinal("Status")),
                                 Ingredients = reader.IsDBNull(reader.GetOrdinal("Ingredients")) ? null : reader.GetString(reader.GetOrdinal("Ingredients")),
@@ -233,6 +238,7 @@ namespace RecipeAPI.Controllers
                                 ImageUrl = reader.IsDBNull(reader.GetOrdinal("ImageUrl")) ? null : reader.GetString(reader.GetOrdinal("ImageUrl")),
                                 Category = reader.GetString(reader.GetOrdinal("Category")),
                                 CookingTime = reader.IsDBNull(reader.GetOrdinal("CookingTime")) ? null : reader.GetString(reader.GetOrdinal("CookingTime")),
+                                Level = reader.IsDBNull(reader.GetOrdinal("Level")) ? "Medium" : reader.GetString(reader.GetOrdinal("Level")),
                                 Rating = reader.GetDecimal(reader.GetOrdinal("Rating")),
                                 Status = reader.GetString(reader.GetOrdinal("Status")),
                                 Ingredients = reader.IsDBNull(reader.GetOrdinal("Ingredients")) ? null : reader.GetString(reader.GetOrdinal("Ingredients")),
@@ -270,6 +276,7 @@ namespace RecipeAPI.Controllers
                                 ImageUrl = reader.IsDBNull(reader.GetOrdinal("ImageUrl")) ? null : reader.GetString(reader.GetOrdinal("ImageUrl")),
                                 Category = reader.GetString(reader.GetOrdinal("Category")),
                                 CookingTime = reader.IsDBNull(reader.GetOrdinal("CookingTime")) ? null : reader.GetString(reader.GetOrdinal("CookingTime")),
+                                Level = reader.IsDBNull(reader.GetOrdinal("Level")) ? "Medium" : reader.GetString(reader.GetOrdinal("Level")),
                                 Rating = reader.GetDecimal(reader.GetOrdinal("Rating")),
                                 Status = reader.GetString(reader.GetOrdinal("Status")),
                                 CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt")),

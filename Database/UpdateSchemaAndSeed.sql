@@ -26,11 +26,17 @@ BEGIN
 END
 GO
 
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Recipes') AND name = 'Level')
+BEGIN
+    ALTER TABLE Recipes ADD Level NVARCHAR(20) DEFAULT 'Medium';
+END
+GO
+
 -- 2. Update Stored Procedures to include new fields
 CREATE OR ALTER PROCEDURE sp_GetRecipes
 AS
 BEGIN
-    SELECT r.Id, r.Title, r.Description, r.ImageUrl, r.Category, r.CookingTime, r.Rating, r.Status, r.CreatedAt, u.Username AS Author
+    SELECT r.Id, r.Title, r.Description, r.ImageUrl, r.Category, r.CookingTime, r.Level, r.Rating, r.Status, r.Ingredients, r.Instructions, r.CreatedAt, u.Username AS Author
     FROM Recipes r
     INNER JOIN Users u ON r.CreatedBy = u.Id;
 END
@@ -40,7 +46,7 @@ CREATE OR ALTER PROCEDURE sp_GetRecipeById
     @Id INT
 AS
 BEGIN
-    SELECT r.Id, r.Title, r.Description, r.ImageUrl, r.Category, r.CookingTime, r.Rating, r.Status, r.CreatedAt, u.Username AS Author
+    SELECT r.Id, r.Title, r.Description, r.ImageUrl, r.Category, r.CookingTime, r.Level, r.Rating, r.Status, r.Ingredients, r.Instructions, r.CreatedAt, u.Username AS Author
     FROM Recipes r
     INNER JOIN Users u ON r.CreatedBy = u.Id
     WHERE r.Id = @Id;
@@ -53,11 +59,14 @@ CREATE OR ALTER PROCEDURE sp_CreateRecipe
     @ImageUrl NVARCHAR(500),
     @Category NVARCHAR(50),
     @CookingTime NVARCHAR(50),
+    @Level NVARCHAR(20),
+    @Ingredients NVARCHAR(MAX),
+    @Instructions NVARCHAR(MAX),
     @CreatedBy INT
 AS
 BEGIN
-    INSERT INTO Recipes (Title, Description, ImageUrl, Category, CookingTime, CreatedBy)
-    VALUES (@Title, @Description, @ImageUrl, @Category, @CookingTime, @CreatedBy);
+    INSERT INTO Recipes (Title, Description, ImageUrl, Category, CookingTime, Level, Ingredients, Instructions, CreatedBy)
+    VALUES (@Title, @Description, @ImageUrl, @Category, @CookingTime, @Level, @Ingredients, @Instructions, @CreatedBy);
     SELECT SCOPE_IDENTITY() AS NewRecipeId;
 END
 GO
@@ -69,6 +78,9 @@ CREATE OR ALTER PROCEDURE sp_UpdateRecipe
     @ImageUrl NVARCHAR(500),
     @Category NVARCHAR(50),
     @CookingTime NVARCHAR(50),
+    @Level NVARCHAR(20),
+    @Ingredients NVARCHAR(MAX),
+    @Instructions NVARCHAR(MAX),
     @Status NVARCHAR(20)
 AS
 BEGIN
@@ -78,6 +90,9 @@ BEGIN
         ImageUrl = @ImageUrl,
         Category = @Category,
         CookingTime = @CookingTime,
+        Level = @Level,
+        Ingredients = @Ingredients,
+        Instructions = @Instructions,
         Status = @Status
     WHERE Id = @Id;
 END
@@ -87,16 +102,16 @@ GO
 DELETE FROM Recipes;
 GO
 
-INSERT INTO Recipes (Title, Description, ImageUrl, Category, CookingTime, Rating, Status, CreatedBy)
+INSERT INTO Recipes (Title, Description, ImageUrl, Category, CookingTime, Level, Rating, Status, CreatedBy)
 VALUES 
-('Paneer Butter Masala', 'Creamy and rich tomato-based curry with paneer cubes.', '/Picture/paneer.jpg', 'North Indian', '30 mins', 4.8, 'published', 1),
-('Chicken Tikka', 'Spicy grilled chicken chunks marinated in yogurt and spices.', '/Picture/paneer.jpg', 'North Indian', '40 mins', 4.9, 'published', 1),
-('Masala Dosa', 'Thin and crispy crepes filled with spiced potato mash.', '/Picture/dosa.jpg', 'South Indian', '25 mins', 4.7, 'published', 2),
-('Idli Sambar', 'Steamed rice cakes served with flavorful lentil soup.', '/Picture/IdliSambhar.jpg', 'South Indian', '20 mins', 4.6, 'published', 2),
-('Mango Lassi', 'Sweet and refreshing mango-flavored yogurt drink.', '/Picture/mango.jpg', 'Beverages', '10 mins', 4.9, 'published', 1),
-('Cold Coffee', 'Creamy chilled coffee with a hint of chocolate.', '/Picture/mango.jpg', 'Beverages', '5 mins', 4.5, 'published', 1),
-('Veg Biryani', 'Aromatic basmati rice cooked with mixed vegetables and spices.', '/Picture/chickenbiryani.jpg', 'Veg', '50 mins', 4.7, 'published', 2),
-('Chicken Biryani', 'Classic layered rice dish with tender chicken and spices.', '/Picture/chickenbiryani.jpg', 'Non-Veg', '60 mins', 4.9, 'published', 2),
-('Aloo Paratha', 'Whole wheat flatbread stuffed with spiced mashed potatoes.', '/Picture/pavbhaji.jpg', 'Breakfast', '20 mins', 4.8, 'published', 1),
-('Veg Sandwich', 'Healthy and quick sandwich with fresh veggies.', '/Picture/sandwitch.jpg', 'Breakfast', '10 mins', 4.4, 'published', 1);
+('Paneer Butter Masala', 'Creamy and rich tomato-based curry with paneer cubes.', '/Picture/paneer.jpg', 'North Indian', '30 mins', 'Easy', 4.8, 'published', 1),
+('Chicken Tikka', 'Spicy grilled chicken chunks marinated in yogurt and spices.', '/Picture/paneer.jpg', 'North Indian', '40 mins', 'Medium', 4.9, 'published', 1),
+('Masala Dosa', 'Thin and crispy crepes filled with spiced potato mash.', '/Picture/dosa.jpg', 'South Indian', '25 mins', 'Medium', 4.7, 'published', 2),
+('Idli Sambar', 'Steamed rice cakes served with flavorful lentil soup.', '/Picture/IdliSambhar.jpg', 'South Indian', '20 mins', 'Easy', 4.6, 'published', 2),
+('Mango Lassi', 'Sweet and refreshing mango-flavored yogurt drink.', '/Picture/mango.jpg', 'Beverages', '10 mins', 'Easy', 4.9, 'published', 1),
+('Cold Coffee', 'Creamy chilled coffee with a hint of chocolate.', '/Picture/mango.jpg', 'Beverages', '5 mins', 'Easy', 4.5, 'published', 1),
+('Veg Biryani', 'Aromatic basmati rice cooked with mixed vegetables and spices.', '/Picture/chickenbiryani.jpg', 'Veg', '50 mins', 'Hard', 4.7, 'published', 2),
+('Chicken Biryani', 'Classic layered rice dish with tender chicken and spices.', '/Picture/chickenbiryani.jpg', 'Non-Veg', '60 mins', 'Hard', 4.9, 'published', 2),
+('Aloo Paratha', 'Whole wheat flatbread stuffed with spiced mashed potatoes.', '/Picture/pavbhaji.jpg', 'Breakfast', '20 mins', 'Easy', 4.8, 'published', 1),
+('Veg Sandwich', 'Healthy and quick sandwich with fresh veggies.', '/Picture/sandwitch.jpg', 'Breakfast', '10 mins', 'Easy', 4.4, 'published', 1);
 GO

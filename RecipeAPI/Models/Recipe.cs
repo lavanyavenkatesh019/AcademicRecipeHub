@@ -11,6 +11,7 @@ namespace RecipeAPI.Models
         public int CreatedBy { get; set; }
         public string Category { get; set; } = string.Empty;
         public string? CookingTime { get; set; }
+        public string Level { get; set; } = "Medium";
         public decimal Rating { get; set; }
         public string Status { get; set; } = "published";
         public string? Ingredients { get; set; }

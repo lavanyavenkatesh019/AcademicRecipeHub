@@ -93,6 +93,8 @@ namespace RecipeAPI.Controllers
                             string username = reader.GetString(reader.GetOrdinal("Username"));
                             string storedHash = reader.GetString(reader.GetOrdinal("PasswordHash"));
                             string role = reader.GetString(reader.GetOrdinal("Role"));
+                            string? profilePicture = reader.IsDBNull(reader.GetOrdinal("ProfilePicture")) 
+                                ? null : reader.GetString(reader.GetOrdinal("ProfilePicture"));
 
                             // Verify password with BCrypt
                             if (BCrypt.Net.BCrypt.Verify(request.Password, storedHash))
@@ -104,7 +106,8 @@ namespace RecipeAPI.Controllers
                                     Token = token,
                                     Username = username,
                                     Role = role,
-                                    UserId = userId
+                                    UserId = userId,
+                                    ProfilePicture = profilePicture
                                 });
                             }
                             else
@@ -119,6 +122,45 @@ namespace RecipeAPI.Controllers
                     }
                 }
             }
+        }
+
+        [HttpPost("reset-password")]
+        public IActionResult ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.NewPassword))
+                return BadRequest(new { message = "Username and new password are required." });
+
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                // 1. Check if user exists
+                using (var checkCmd = new SqlCommand("SELECT COUNT(*) FROM Users WHERE Username = @Username", conn))
+                {
+                    checkCmd.Parameters.AddWithValue("@Username", request.Username);
+                    int count = (int)checkCmd.ExecuteScalar();
+                    if (count == 0)
+                        return BadRequest(new { message = "Username not found." });
+                }
+
+                // 2. Hash new password
+                string newHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+
+                // 3. Update password
+                using (var cmd = new SqlCommand("sp_ResetUserPasswordByUsername", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Username", request.Username);
+                    cmd.Parameters.AddWithValue("@NewPasswordHash", newHash);
+
+                    int rowsAffected = (int)cmd.ExecuteScalar();
+                    if (rowsAffected > 0)
+                    {
+                        return Ok(new { message = "Password reset successfully." });
+                    }
+                }
+            }
+            return BadRequest(new { message = "Failed to reset password." });
         }
 
         [HttpPost("seed-admins")]
