@@ -1,0 +1,18 @@
+# Node.js
+frontend/node_modules/
+frontend/dist/
+frontend/.env*
+
+# .NET
+backend/RecipeAPI/bin/
+backend/RecipeAPI/obj/
+backend/RecipeAPI/appsettings.Development.json
+*.user
+*.suo
+*.sln.docstates
+
+# Misc
+.DS_Store
+Thumbs.db
+.vs/
+.vscode/
